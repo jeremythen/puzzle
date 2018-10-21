@@ -46,10 +46,10 @@ public class Puzz extends Application {
         char searchDirection = directionMap.get(currentDirection);
         
         char endCurrentDirection = 'l';
-        char endSearchDirection = directionMap.get(endCurrentDirection);
+        char endSearchDirection = searchMap.get(endCurrentDirection);
         
         String finished = "";
-        
+        int counter = 0;
         while(!current.getText().equals("End")) {
 
         	searchedTile = current.get(searchDirection);
@@ -63,33 +63,21 @@ public class Puzz extends Application {
             
             current.setPassed(current.getPassed() + 1);
             endCurrent.setPassed(endCurrent.getPassed() + 1);
-            
-            current.setStartMark(current.getStartMark() + 1);
-            endCurrent.setEndMark(endCurrent.getEndMark() + 1);
-            
-            if(endCurrent.getStartMark() > 0) {
+           
+            if(endCurrent.getMark() == 1) {
             	finished = "END found Start mark.";
             	System.out.println(finished);
             	break;
             }
             
-            if(current.getEndMark() > 0) {
+            if(current.getMark() == 2) {
             	finished = "START found End mark.";
             	System.out.println(finished);
             	break;
             }
             
-            if(current.getPassed() > 3) {
-            	finished = "Start didn't find end";
-            	System.out.println(finished);
-            	break;
-            }
-            	
-            if(endCurrent.getPassed() > 3) {
-            	finished = "End didn't find start";
-            	System.out.println(finished);
-            	break;
-            }
+            current.setMark(1);
+            endCurrent.setMark(2);
             
             if(searchedTile.getType() != Tiles.WALL) {
             	current = searchedTile;
@@ -104,22 +92,36 @@ public class Puzz extends Application {
             	searchDirection = directionMap.get(currentDirection);
             }
             
+            // END search
             if(endSearchedTile.getType() != Tiles.WALL) {
             	endCurrent = endSearchedTile;
-            	char c2 = directionMap.get(endCurrentDirection);
+            	char c2 = searchMap.get(endCurrentDirection);
             	endCurrentDirection = c2;
-            	endSearchDirection = directionMap.get(c2);
+            	endSearchDirection = searchMap.get(c2);
             }else if(endNextTile.getType() != Tiles.WALL) {
             	endCurrent = endNextTile;
             }else {
-            	char c2 = searchMap.get(endCurrentDirection);
+            	char c2 = directionMap.get(endCurrentDirection);
             	endCurrentDirection = c2;
-            	endSearchDirection = directionMap.get(endCurrentDirection);
+            	endSearchDirection = searchMap.get(endCurrentDirection);
+            }
+            
+            if(current.getPassed() > 3) {
+            	finished = "Start didn't find end";
+            	System.out.println(finished);
+            	break;
+            }
+            	
+            if(endCurrent.getPassed() > 3) {
+            	finished = "End didn't find start";
+            	System.out.println(finished);
+            	break;
             }
         	
+            counter++;
         }
         
-        System.out.println(current.getText());
+        System.out.println("counter " + counter);
         
     }
     

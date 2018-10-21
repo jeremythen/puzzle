@@ -86,15 +86,15 @@ public class TilesClass {
     
     private static String getStrings(int i) {
         
-        List<String> stringList = new ArrayList();
+        List<String> stringList = new ArrayList<>();
         
-        stringList.add(a);
-        stringList.add(b);
-        stringList.add(c);
-        stringList.add(d);
-        stringList.add(e);
-        stringList.add(f);
-        stringList.add(g);
+        stringList.add(TilesClass.a);
+        stringList.add(TilesClass.b);
+        stringList.add(TilesClass.c);
+        stringList.add(TilesClass.d);
+        stringList.add(TilesClass.e);
+        stringList.add(TilesClass.f);
+        stringList.add(TilesClass.g);
         
         return stringList.get(i);
     }
@@ -107,15 +107,13 @@ public class TilesClass {
         private static Tiles tail;
         
         private int type;
+        private int passed = 0;
+        private int mark = 0;
         private Tiles u;
         private Tiles r;
         private Tiles d;
         private Tiles l;
-        private int passed = 0;
-        private int endPassed = 0;
-        private int startMark = 0;
-        private int endMark = 0;
-        
+
         protected Tiles get(char dir) {
         	switch(dir) {
         		case 'u': return this.u;
@@ -138,7 +136,6 @@ public class TilesClass {
             }
                 this.setPrefHeight(60);
                 this.setPrefWidth(60);
-                
         }
         
         protected Tiles() {
@@ -207,29 +204,14 @@ public class TilesClass {
             return this.passed;
         }
         
-        public void setEndPassed(int n) {
-            this.endPassed = n;
+        public void setMark(int n) {
+            this.mark = n;
         }
-        public int getEndPassed() {
-            return this.endPassed;
+        public int getMark() {
+            return this.mark;
         }
-        
-        public void setStartMark(int n) {
-            this.startMark = n;
-        }
-        public int getStartMark() {
-            return this.startMark;
-        }
-        public void setEndMark(int n) {
-            this.endMark = n;
-        }
-        public int getEndMark() {
-            return this.endMark;
-        }
-        
-        
+
     }
-    
     
     
     private static String a = ".W.\n"+
