@@ -1,70 +1,125 @@
 
-package tests;
+package puzzle;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
-import static tests.TilesClass.Tiles;
+import static puzzle.TilesClass.Tiles;
+import java.util.*;
 public class Puzz extends Application {
-    private static boolean found = false;
-    private static Tiles[][] tilesArr;
     @Override
     public void start(Stage stage) {
-        TilesClass tiles = new TilesClass();
-        
-        //GridPane gPane = TilesClass.getTilesGrid(1);
-        
-        GridPane gPane = TilesClass.getTilesGrid(6);
-        tilesArr = TilesClass.getTilesArray();
-        
-        
+        GridPane gPane = TilesClass.getTilesGrid(5);
         Scene scene = new Scene(gPane, 1600, 800);
-        
         stage.setScene(scene);
         stage.show();
-        
+        findPath();
     }
     
     public static void findPath() {
          
-        Tiles start = tilesArr[0][0];
-        Tiles end = tilesArr[0][0];
+        Tiles start = Tiles.getFirst();
+        Tiles end = Tiles.getLast();
+        Map<Character, Character> directionMap = new HashMap<>();
+        Map<Character, Character> searchMap = new HashMap<>();
         
+        Tiles current = start;
+        Tiles endCurrent = end;
+
+        Tiles searchedTile = null;
+        Tiles nextTile = null;
+        Tiles endSearchedTile = null;
+        Tiles endNextTile = null;
         
-        new Thread(() -> {
-            Tiles current = start;
-            while(!current.getText().equals("End")) {
-                
-                
-                
+        directionMap.put('r', 'u');
+        directionMap.put('d', 'r');
+        directionMap.put('l', 'd');
+        directionMap.put('u', 'l');
+        
+        searchMap.put('r', 'd');
+        searchMap.put('d', 'l');
+        searchMap.put('l', 'u');
+        searchMap.put('u', 'r');
+        
+        char currentDirection = 'r';
+        char searchDirection = directionMap.get(currentDirection);
+        
+        char endCurrentDirection = 'l';
+        char endSearchDirection = directionMap.get(endCurrentDirection);
+        
+        String finished = "";
+        
+        while(!current.getText().equals("End")) {
+
+        	searchedTile = current.get(searchDirection);
+        	nextTile = current.get(currentDirection);
+        	
+            endSearchedTile = endCurrent.get(endSearchDirection);
+            endNextTile = endCurrent.get(endCurrentDirection);
+            
+            current.setStyle("-fx-background-color: blue;");
+            endCurrent.setStyle("-fx-background-color: green;");
+            
+            current.setPassed(current.getPassed() + 1);
+            endCurrent.setPassed(endCurrent.getPassed() + 1);
+            
+            current.setStartMark(current.getStartMark() + 1);
+            endCurrent.setEndMark(endCurrent.getEndMark() + 1);
+            
+            if(endCurrent.getStartMark() > 0) {
+            	finished = "END found Start mark.";
+            	System.out.println(finished);
+            	break;
             }
             
-            found = true;
-            
-        }).start();
-        
-        
-        new Thread(() -> {
-            
-            Tiles current = start;
-            while(current.getPassed() != 1 || !current.getText().equals("Start")) {
-                
-                Tiles u = current.getUp();
-                Tiles r = current.getRight();
-                Tiles d = current.getDown();
-                Tiles l = current.getLeft();
-
-                if(u.getType() == 1 && r.getType() == 1 && d.getType() == 1 && l.getType() == 1) {
-                    
-                }
+            if(current.getEndMark() > 0) {
+            	finished = "START found End mark.";
+            	System.out.println(finished);
+            	break;
             }
             
-            found = true;
+            if(current.getPassed() > 3) {
+            	finished = "Start didn't find end";
+            	System.out.println(finished);
+            	break;
+            }
+            	
+            if(endCurrent.getPassed() > 3) {
+            	finished = "End didn't find start";
+            	System.out.println(finished);
+            	break;
+            }
             
-        }).start();
+            if(searchedTile.getType() != Tiles.WALL) {
+            	current = searchedTile;
+            	char c2 = directionMap.get(currentDirection);
+            	currentDirection = c2;
+            	searchDirection = directionMap.get(c2);
+            }else if(nextTile.getType() != Tiles.WALL) {
+            	current = nextTile;
+            }else {
+            	char c2 = searchMap.get(currentDirection);
+            	currentDirection = c2;
+            	searchDirection = directionMap.get(currentDirection);
+            }
+            
+            if(endSearchedTile.getType() != Tiles.WALL) {
+            	endCurrent = endSearchedTile;
+            	char c2 = directionMap.get(endCurrentDirection);
+            	endCurrentDirection = c2;
+            	endSearchDirection = directionMap.get(c2);
+            }else if(endNextTile.getType() != Tiles.WALL) {
+            	endCurrent = endNextTile;
+            }else {
+            	char c2 = searchMap.get(endCurrentDirection);
+            	endCurrentDirection = c2;
+            	endSearchDirection = directionMap.get(endCurrentDirection);
+            }
+        	
+        }
         
-
+        System.out.println(current.getText());
         
     }
     

@@ -1,5 +1,5 @@
 
-package tests;
+package puzzle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +59,7 @@ public class TilesClass {
                    tiles[i][j] = temp;
                    
                    
-                   if(counter > width) {
+                   if(counter > 0) {
                        Tiles upButton = tiles[i - 1][j];
                        tile.setUp(upButton);
                        upButton.setDown(tile);
@@ -67,10 +67,10 @@ public class TilesClass {
 
                    temp.setOnAction(e -> {
                        Tiles button = (Tiles) e.getSource();
-                       System.out.println(button.getRight());
-                       System.out.println(button.getLeft());
-                       System.out.println(button.getUp());
-                       System.out.println(button.getDown());
+                       System.out.println(button.getUp().getType());
+                       System.out.println(button.getRight().getType());
+                       System.out.println(button.getDown().getType());
+                       System.out.println(button.getLeft().getType());
                    });
                    gPane.add(temp, j, i);
             }
@@ -112,10 +112,20 @@ public class TilesClass {
         private Tiles d;
         private Tiles l;
         private int passed = 0;
-        /*protected Tiles() {
-            super();
+        private int endPassed = 0;
+        private int startMark = 0;
+        private int endMark = 0;
+        
+        protected Tiles get(char dir) {
+        	switch(dir) {
+        		case 'u': return this.u;
+        		case 'r': return this.r;
+        		case 'd': return this.d;
+        		case 'l': return this.l;
+        	}
+        	return null;
         }
-*/
+        
         protected Tiles(char t) {
             super();
             if('W' == t) {
@@ -190,12 +200,33 @@ public class TilesClass {
             return this.getText();
         }
         
-        synchronized public void setPassed(int n) {
+        public void setPassed(int n) {
             this.passed = n;
         }
-        synchronized public int getPassed() {
+        public int getPassed() {
             return this.passed;
         }
+        
+        public void setEndPassed(int n) {
+            this.endPassed = n;
+        }
+        public int getEndPassed() {
+            return this.endPassed;
+        }
+        
+        public void setStartMark(int n) {
+            this.startMark = n;
+        }
+        public int getStartMark() {
+            return this.startMark;
+        }
+        public void setEndMark(int n) {
+            this.endMark = n;
+        }
+        public int getEndMark() {
+            return this.endMark;
+        }
+        
         
     }
     
