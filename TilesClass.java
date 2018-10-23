@@ -1,5 +1,5 @@
 
-package puzzle;
+package tests;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +45,7 @@ public class TilesClass {
                     
                 }else {
                    temp = new Tiles(s.charAt(counter++));
-                   temp.setText("" + counter);
+                   //temp.setText("" + counter);
                 }
                 
                    if(j != 0)
@@ -115,24 +115,24 @@ public class TilesClass {
         private Tiles l;
 
         protected Tiles get(char dir) {
-        	switch(dir) {
-        		case 'u': return this.u;
-        		case 'r': return this.r;
-        		case 'd': return this.d;
-        		case 'l': return this.l;
-        	}
-        	return null;
+            switch(dir) {
+                case 'u': return this.u;
+                case 'r': return this.r;
+                case 'd': return this.d;
+                case 'l': return this.l;
+            }
+            return null;
         }
         
         protected Tiles(char t) {
             super();
             if('W' == t) {
                 this.type = Tiles.WALL;
-                this.setStyle("-fx-background-color: #f45342; -fx-border-color: black;");
+                this.setStyle("-fx-background-color: #f45342; -fx-border-color: #878787;");
 
             }else{
                 this.type = Tiles.PATH;
-                this.setStyle("-fx-background-color: white; -fx-border-color: black;");
+                this.setStyle("-fx-background-color: white; -fx-border-color: #878787;");
             }
                 this.setPrefHeight(60);
                 this.setPrefWidth(60);
@@ -141,7 +141,7 @@ public class TilesClass {
         protected Tiles() {
             super();
             this.type = Tiles.WALL;
-            this.setStyle("-fx-background-color: #f45342; -fx-border-color: black;");
+            this.setStyle("-fx-background-color: #f45342; -fx-border-color: #878787;");
             this.setPrefHeight(60);
             this.setPrefWidth(60);
         }
