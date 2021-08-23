@@ -1,8 +1,11 @@
-
 package tests;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiPredicate;
+import java.util.function.BinaryOperator;
+import java.util.function.Predicate;
+
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 
@@ -35,46 +38,35 @@ public class TilesClass {
         GridPane gPane = new GridPane();
         
         Tiles tile = null;
+
+        BiPredicate<Integer, Integer> isAtTheEdges = (i, j) -> i == 0 || j == 0 || j == (len - 1) || i == (len - 1);
+
         for(int i = 0; i < len; i++) {
             for(int j = 0; j < len; j++) {
-                
-                Tiles temp; // = new Tiles(s.charAt(counter++));
-                
-                if(i == 0 || j == 0 || j == (len - 1) || i == (len - 1)) {
-                    temp = new Tiles();
-                    
-                }else {
-                   temp = new Tiles(s.charAt(counter++));
-                   //temp.setText("" + counter);
-                }
-                
-                   if(j != 0)
-                    temp.setLeft(tile);
-                   
-                   if(tile != null) {
-                       if(j != 0)
-                        tile.setRight(temp);
-                   }
-                   tile = temp;
-                   tiles[i][j] = temp;
-                   
-                   
-                   if(counter > 0) {
-                       Tiles upButton = tiles[i - 1][j];
-                       tile.setUp(upButton);
-                       upButton.setDown(tile);
-                   }
 
-                   temp.setOnAction(e -> {
-                       Tiles button = (Tiles) e.getSource();
-                       System.out.println(button.getUp().getType());
-                       System.out.println(button.getRight().getType());
-                       System.out.println(button.getDown().getType());
-                       System.out.println(button.getLeft().getType());
-                   });
-                   gPane.add(temp, j, i);
+                Tiles temp = isAtTheEdges.test(i, j) ? new Tiles() : new Tiles(s.charAt(counter++));
+                
+               if(j != 0) {
+                   temp.setLeft(tile);
+               }
+
+               if(tile != null && j != 0) {
+                   tile.setRight(temp);
+               }
+
+               tile = temp;
+               tiles[i][j] = tile;
+
+               if(counter > 0) {
+                   Tiles tileOnTop = tiles[i - 1][j];
+                   tile.setUp(tileOnTop);
+                   tileOnTop.setDown(tile);
+               }
+
+               gPane.add(tile, j, i);
             }
         }
+
         Tiles.setFirst(tiles[1][1]);
         Tiles.setLast(tiles[width][height]);
         Tiles.getFirst().setText("Start");
@@ -109,10 +101,10 @@ public class TilesClass {
         private int type;
         private int passed = 0;
         private int mark = 0;
-        private Tiles u;
-        private Tiles r;
-        private Tiles d;
-        private Tiles l;
+        private Tiles u; // up
+        private Tiles r; // right
+        private Tiles d; // down
+        private Tiles l; // left
 
         protected Tiles get(char dir) {
             switch(dir) {
@@ -254,7 +246,7 @@ public class TilesClass {
                          "..WWW..........W.\n"+
                          ".WW...WW.....W.W.",
 
-                 f = "..WWWW.WW.WW\n"+
+                 f =     "..WWWW.WW.WW\n"+
                          "....WW......\n"+
                          ".W.WW.W....W\n"+
                          ".W..WWW.....\n"+
@@ -267,7 +259,7 @@ public class TilesClass {
                          "W.W.....W.WW\n"+
                          "............",
 
-                 g = ".....W.WW........WW.WW....W...WWW.W...W..WW...\n"+
+                 g =     ".....W.WW........WW.WW....W...WWW.W...W..WW...\n"+
                          "...WWW.W......W..W....W..W.WW.........W.WWW...\n"+
                          "WW.WW...WWW.W.WW..W.W..................WW...WW\n"+
                          ".........W.W.W.W....W.W.W......WW...W......W..\n"+
